@@ -10,4 +10,6 @@ val B = List("hola", "mi", "amor", "querido")
 
 B.reduce(_ concat _)
 
-Anagrams.dictionaryByOccurrences
+val occurrances: Anagrams.Occurrences = List(('a', 2), ('b', 2))
+
+Anagrams.combinations(occurrances)

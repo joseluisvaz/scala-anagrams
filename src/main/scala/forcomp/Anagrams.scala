@@ -86,7 +86,20 @@ object Anagrams {
    *  Note that the order of the occurrence list subsets does not matter -- the subsets
    *  in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] = {
+    if (occurrences isEmpty) List(List())
+    else {
+      val char = occurrences.head._1
+      val freq = occurrences.head._2
+      (for {
+        i <- 0 to freq
+        rest <- combinations(occurrences.tail)  //ussing recurssion to traverse list
+      } yield {
+        if (i == 0) rest
+        else (char, i)::rest
+      }).toList
+    }
+  }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    *
@@ -98,8 +111,18 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
-
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    if (y.isEmpty) x
+    else {
+      val (erste, nexte) = x.span(p => p._1 != y.head._1)
+      val wieoft = nexte.head._2 - y.head._2
+      val neunext = {
+        if (wieoft > 0) (nexte.head._1, wieoft) :: nexte.tail
+        else nexte.tail
+      }
+      subtract(erste:::neunext, y.tail)
+    }
+  }
   /** Returns a list of all anagram sentences of the given sentence.
    *
    *  An anagram of a sentence is formed by taking the occurrences of all the characters of
